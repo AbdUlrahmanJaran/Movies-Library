@@ -1,5 +1,5 @@
 'use strict';
-const movies = require("./data.json");
+const movies = require("./Movie Data/data.json");
 const express = require("express");
 const app = express();
 
@@ -11,6 +11,7 @@ function Movie(title, poster_path, overview){
 
 app.get('/', moviesHandler);
 app.get('/favorite', favoriteHandler);
+app.use("*", notFoundHandler);
 
 function moviesHandler(req, res){
     let result = [];
@@ -24,6 +25,10 @@ function moviesHandler(req, res){
 function favoriteHandler(request, response){
     return response.send("Welcome to Favorite");
 };
+
+function notFoundHandler(req, res){
+    return res.status(404).send("Not Found");
+}
 
 app.listen(3000, () => {
     console.log("Listen on 3000");
