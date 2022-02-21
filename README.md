@@ -13,7 +13,7 @@ Our website aim to give the User Movies by category.
 
 - write "npm install express" in Termenal
 
-- write those in server.js
+- write those in server.js:
 
 1. const express = require("express")
 
@@ -23,8 +23,16 @@ Our website aim to give the User Movies by category.
 
 - create end points (ex: app.get("/", welcomeHandler))
 
-- function for that end point (ex: welcomeHandler)
+- Function for that end point (ex: welcomeHandler)
 
+- to add an API you have to do those steps:
+
+1. const axios = require("axios");
+
+2. axios.get("URL").then(apiResponse) in The Function
+You Should change URL to the API's URL with a specific API Key and complete apiResponse as your API's needs.
+
+- Make Error Handlers
 ## Project Features
 <!-- What are the features included in you app -->
 The apility to see what movies information do we have and select a favorite movies.
