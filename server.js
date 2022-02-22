@@ -58,11 +58,13 @@ function trendingHandler(req, res) {
 
 function searchHandler(req, res) {
     let result = [];
-    axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=The&page=2`).then(apiResponse => {
+    const search = req.query.Movie;
+    axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${search}`).then(apiResponse => {
         apiResponse.data.results.map(value => {
             let oneMovie = new Movie(value.id, value.title, value.release_date, value.poster_path, value.overview);
             result.push(oneMovie);
         })
+        console.log(result);
         return res.status(200).json(result);
     }).catch(error => {
         errorHandler(error, req, res);
