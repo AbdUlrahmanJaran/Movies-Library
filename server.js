@@ -3,12 +3,15 @@ const movies = require("./Movie Data/data.json");
 const express = require("express");
 const dotenv = require("dotenv");
 const axios = require("axios");
-
+const pg = require("pg");
 dotenv.config();
 const app = express();
 
 const apiKey = process.env.apiKey;
 const port = process.env.PORT;
+const DATABASE_URL = process.env.DATABASE_URL;
+
+const client = new pg.Client(DATABASE_URL);
 
 function Movie(id, title, release_date, poster_path, overview) {
     this.id = id;
@@ -18,12 +21,16 @@ function Movie(id, title, release_date, poster_path, overview) {
     this.overview = overview;
 }
 
+app.use(express.json());
+
 app.get('/', moviesHandler);
 app.get('/favorite', favoriteHandler);
 app.get('/trending', trendingHandler);
 app.get('/search', searchHandler);
 app.get('/topRated', topRatedHandler);
 app.get('/similarToShawshankRedemption', similarToShawshankRedemptionHandler);
+app.post("/addMovie", addMovieHandler);
+app.get("/getMovies", getMoviesHandler);
 app.use("*", notFoundHandler);
 app.use(errorHandler);
 
@@ -97,10 +104,31 @@ function similarToShawshankRedemptionHandler(req, res) {
     })
 };
 
+function addMovieHandler(req, res){
+    const movie = req.body;
+    const sql = `INSERT INTO moviesTable(title, release_date, poster_path, overview) VALUES($1, $2, $3, $4) RETURNING *`;
+    const values = [movie.title, movie.release_date, movie.poster_path, movie.overview];
+    client.query(sql, values).then((result)=>{
+        return res.status(201).json(result.rows);
+    }).catch((error) => {
+        errorHandler(error, req, res);
+    });
+};
+
+function getMoviesHandler(req, res){
+    const sql = `SELECT * FROM moviesTable`;
+
+    client.query(sql).then((result) => {
+        return res.status(200).json(result.rows);
+    }).catch((error) => {
+        errorHandler(error, req, res);
+    });
+};
+
 function errorHandler(error, req, res) {
     const err = {
         status: 500,
-        responseText: "Sorry, something went wrong"
+        responseText: `${error} Sorry, something went wrong`
     }
     return res.status(500).send(err);
 }
@@ -109,6 +137,8 @@ function notFoundHandler(req, res) {
     return res.status(404).send("Page Not Found");
 }
 
-app.listen(port, () => {
-    console.log(`Listen on ${port}`);
-});
+client.connect().then(() => {
+    app.listen(port, () => {
+        console.log(`Listen on ${port}`);
+    });
+})
