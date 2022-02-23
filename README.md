@@ -32,6 +32,16 @@ Our website aim to give the User Movies by category.
 2. axios.get("URL").then(apiResponse) in The Function
 You Should change URL to the API's URL with a specific API Key and complete apiResponse as your API's needs.
 
+- to make a DATABASE:
+
+1. Install PostgreSQL
+
+2. Create the database URL and do the configurations (require, new pg.Client, clint.connect)
+
+3. write this on top of the end points "app.use(express.json())"
+
+4. make an end point and function to handle it for what you want (insert(post) , select(get))
+
 - Make Error Handlers
 ## Project Features
 <!-- What are the features included in you app -->
