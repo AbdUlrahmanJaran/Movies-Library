@@ -40,7 +40,7 @@ You Should change URL to the API's URL with a specific API Key and complete apiR
 
 3. write this on top of the end points "app.use(express.json())"
 
-4. make an end point and function to handle it for what you want (insert(post) , select(get))
+4. make an end point and function to handle it for what you want (insert(post) , select(get), update(put), delete(delete)).
 
 - Make Error Handlers
 ## Project Features

@@ -31,6 +31,9 @@ app.get('/topRated', topRatedHandler);
 app.get('/similarToShawshankRedemption', similarToShawshankRedemptionHandler);
 app.post("/addMovie", addMovieHandler);
 app.get("/getMovies", getMoviesHandler);
+app.get("getMovie/:id", getMovieHandler);
+app.put("/UPDATE/:id", updateHandler);
+app.delete("/DELETE/:id", deleteHandler);
 app.use("*", notFoundHandler);
 app.use(errorHandler);
 
@@ -123,6 +126,47 @@ function getMoviesHandler(req, res){
     }).catch((error) => {
         errorHandler(error, req, res);
     });
+};
+
+function getMovieHandler(req, res){
+    let id = req.params.id;
+    
+    const sql = `SELECT * FROM moviesTable WHERE id=$1;`;
+    const values = [id];
+
+    client.query(sql, values).then((result) => {
+        return res.status(200).json(result.rows);
+    }).catch((error) => {
+        errorHandler(error, req, res)
+    })
+};
+
+function updateHandler(req, res){
+    const id = req.params.id;
+    const movie = req.body;
+   
+    const sql = `UPDATE moviesTable SET title=$1, release_date=$2,poster_path=$3, overview=$4, comment=$5 WHERE id=$6 RETURNING *;`;
+    const values = [movie.title, movie.release_date, movie.poster_path, movie.overview, movie.comment, id];
+
+    client.query(sql, values).then((result) => {
+        return res.status(200).json(result.rows);
+    }).catch((error) => {
+        errorHandler(error, req, res);
+    })
+
+};
+
+function deleteFavmovieHandler(req, res){
+    const id = req.params.id
+
+    const sql = `DELETE FROM moviesTable WHERE id=$1;`
+    const values = [id];
+
+    client.query(sql, values).then(() => {
+        return res.status(204).json({})
+    }).catch(error => {
+        errorHandler(error, req, res);
+    })
 };
 
 function errorHandler(error, req, res) {
