@@ -156,7 +156,7 @@ function updateHandler(req, res){
 
 };
 
-function deleteFavmovieHandler(req, res){
+function deleteHandler(req, res){
     const id = req.params.id
 
     const sql = `DELETE FROM moviesTable WHERE id=$1;`
