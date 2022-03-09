@@ -1,12 +1,13 @@
 'use strict';
 const movies = require("./Movie Data/data.json");
 const express = require("express");
+const cors = require("cors");
 const dotenv = require("dotenv");
 const axios = require("axios");
 const pg = require("pg");
 dotenv.config();
 const app = express();
-
+app.use(cors());
 const apiKey = process.env.apiKey;
 const port = process.env.PORT;
 const DATABASE_URL = process.env.DATABASE_URL;
